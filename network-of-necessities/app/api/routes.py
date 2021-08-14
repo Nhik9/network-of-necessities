@@ -39,8 +39,7 @@ def login():
     form = UserLoginForm()
     return render_template('login.html', form=form)
 
-
-@current_app.route('register')
+@current_app.route('/register')
 def register():
     form = UserRegisterForm()
     return render_template('register.html', form=form)

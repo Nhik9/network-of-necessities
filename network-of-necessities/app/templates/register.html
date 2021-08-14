@@ -13,10 +13,17 @@
             {{ form.name(size=32) }}
         </p>
         <p>
-            {{ form.gender.label }}<br>
-            {{ form.password(size=32) }}
+            {{ form.gender}}<br>
         </p>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p>
+            {{ form.date_of_birth}}<br>
+        </p>
+        <p>
+            {{ form.status}}<br>
+        </p>
+        <p>
+            {{ form.purpose}}<br>
+        </p>
         <p>{{ form.submit() }}</p>
     </form>
 </body>
