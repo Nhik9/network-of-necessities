@@ -29,7 +29,7 @@ def mapview():
                         tooltip=r['Name'] ) \
             .add_to ( marker_cluster )
     map.save(template_dir + 'map.html')
-    return render_template('index.html')
+    return render_template('display_map.html')
 
 
 if __name__ == "__main__":
