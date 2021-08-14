@@ -56,8 +56,7 @@ def login():
             flash_errors ( form )
     return render_template('login.html', form=form)
 
-
-@current_app.route('register')
+@current_app.route('/register')
 def register():
     # If user is already signed in
     if current_user.is_authenticated:
