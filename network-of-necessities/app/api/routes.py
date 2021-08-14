@@ -1,13 +1,18 @@
-from flask import render_template
+from flask import render_template , flash , url_for
+from flask_admin.helpers import flash_errors , is_safe_url
+from werkzeug.exceptions import abort
+from werkzeug.utils import redirect
+
 from app import current_app
 import folium
 from folium.plugins import MarkerCluster
 import pandas as pd
 import io
 import os
-
+from flask_login import current_user , login_user
 # Sample Data including geographical location
 from app.models.forms import UserLoginForm , UserRegisterForm
+from app.models.user import User
 
 data = """Name,Address,Lat,Lon
 EU,"Rue de la Loi/Wetstraat 175, Brussel, Belgium",50.842313,4.382300
@@ -36,13 +41,40 @@ def mapview():
 
 @current_app.route('/login')
 def login():
+    # If user is already signed in
+    if current_user.is_authenticated:
+        flash("You are already signed in!", "info")
+        return redirect(url_for('app.index'))
+
     form = UserLoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and login_user ( user ) :
+            flash ( "Signed in successfully!" , category="success" )
+            return redirect ( url_for ( 'app.index') )
+        else:
+            flash_errors ( form )
     return render_template('login.html', form=form)
 
 
 @current_app.route('register')
 def register():
+    # If user is already signed in
+    if current_user.is_authenticated:
+        flash("You are already signed in!", "info")
+        return redirect(url_for('app.index'))
+
     form = UserRegisterForm()
+    if form.validate_on_submit():
+        new_user = User ( form.email.data ,
+                          form.username.data ,
+                          form.password.data )
+        new_user.db_commit ()
+        flash ( "Signed up successfully!" , category="success" )
+        return redirect ( url_for ( 'app.login' ) )
+    else :
+        flash_errors ( form )
+
     return render_template('register.html', form=form)
 
 
